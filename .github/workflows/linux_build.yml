@@ -10,13 +10,11 @@ env:
     CARGO_TERM_COLOR: always
 
 jobs:
-    "linux build":
+    "linux_build":
         runs-on: ubuntu-latest
 
         steps:
         - uses: actions/checkout@v2
-        - name: run release
-          run: cargo run --release --verbose
         - name: cleanAfterRun
           run: cargo clean
         - name: buildRelease

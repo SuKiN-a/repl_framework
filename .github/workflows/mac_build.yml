@@ -15,10 +15,6 @@ jobs:
 
         steps:
         - uses: actions/checkout@v2
-        - name: run release
-          run: cargo run --release --verbose
-        - name: cleanAfterRun
-          run: cargo clean
         - name: buildRelease
           run: cargo build --release --verbose
         - name: cleanAfterBuildRelease
