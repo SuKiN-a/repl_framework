@@ -1,0 +1,29 @@
+name: "windows build"
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+env:
+    CARGO_TERM_COLOR: always
+
+jobs:
+    build_for_windows:
+        runs-on: windows-latest
+
+        steps:
+        - uses: actions/checkout@v2
+        - name: run release
+          run: cargo run --release --verbose
+        - name: cleanAfterRun
+          run: cargo clean
+        - name: buildRelease
+          run: cargo build --release --verbose
+        - name: cleanAfterBuildRelease
+          run: cargo clean
+        - name: Build
+          run: cargo build --verbose
+        - name: Run tests
+          run: cargo test --verbose
