@@ -1,6 +1,6 @@
 #![allow(dead_code)]
-use std::io::{self, Write};
 use std::collections::HashMap;
+use std::io::{self, Write};
 /// The main Repl Struct which contains pretty much everything the crate has to offer
 #[derive(Debug)]
 pub struct Repl {
@@ -12,7 +12,7 @@ pub struct Repl {
     exit: String,
     /// all the functions in HashMap<String, fn(Vec<String>)> format, specified Vec<String>
     /// because of the limitations of function pointers
-    functions: HashMap<String, fn(Vec<String>)>
+    functions: HashMap<String, fn(Vec<String>)>,
 }
 /// Repl methods
 impl Repl {
@@ -68,12 +68,16 @@ impl Repl {
     ///         functions: HashMap<String, fn(Vec<String>)>
     ///     );
     ///}
-    pub fn customized_new(prompt: &str, exit: &str, functions: HashMap<String, fn(Vec<String>)>) -> Repl {
+    pub fn customized_new(
+        prompt: &str,
+        exit: &str,
+        functions: HashMap<String, fn(Vec<String>)>,
+    ) -> Repl {
         Repl {
             arguments: vec![String::new()],
             prompt: prompt.to_string(),
             exit: exit.to_string(),
-            functions: functions,
+            functions,
         }
     }
     /// returns new repl
@@ -112,26 +116,30 @@ impl Repl {
     /// }
     pub fn run(&mut self) {
         loop {
-            &self.take_arg();
+            self.take_arg();
             if self.arguments.concat() == self.exit {
                 println!("Terminated REPL");
                 break;
             }
             if self.functions.contains_key(&self.arguments[0]) {
-                self.functions[&self.arguments[0]](self.arguments[1..self.arguments.len()].to_vec());
+                self.functions[&self.arguments[0]](
+                    self.arguments[1..self.arguments.len()].to_vec(),
+                );
             }
         }
     }
     /// Runs the repl in debug mode
     pub fn run_debug(&mut self) {
         loop {
-            &self.take_arg();
+            self.take_arg();
             if self.arguments.concat() == self.exit {
                 println!("Terminated REPL");
                 break;
             }
             if self.functions.contains_key(&self.arguments[0]) {
-                self.functions[&self.arguments[0]](self.arguments[1..self.arguments.len()].to_vec());
+                self.functions[&self.arguments[0]](
+                    self.arguments[1..self.arguments.len()].to_vec(),
+                );
             }
             println!("{:?}", &self);
         }
