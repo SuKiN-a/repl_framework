@@ -26,7 +26,7 @@ impl Repl {
     /// }
     /// fn main() {
     ///     let mut hashmap = HashMap::new();
-    ///     hashmap.insert("test".to_string(), test as fn(Vec<()>)); 
+    ///     hashmap.insert("test".to_string(), test as fn(Vec<()>));
     ///     let mut repl = Repl::new(">>> ", hashmap);
     ///     repl.take_arg();
     /// }
@@ -106,7 +106,7 @@ impl Repl {
     /// }
     /// fn main() {
     ///     let mut hashmap = HashMap::new();
-    ///     hashmap.insert("test".to_string(), test as fn(Vec<String>)); 
+    ///     hashmap.insert("test".to_string(), test as fn(Vec<String>));
     ///     let mut repl = Repl::new(">>> ", hashmap);
     ///     repl.run()
     /// }
