@@ -18,9 +18,10 @@ pub struct Repl {
 impl Repl {
     /// Takes argument from stdin and mutate self.arguments to it
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
     /// use std::collections::HashMap;
-    /// fn test() {
+    /// use repl_framework::Repl;
+    /// fn test(Vec<String>) {
     /// println!("test!");
     /// }
     /// fn main() {
@@ -58,7 +59,8 @@ impl Repl {
     /// returns a customized Repl
     /// currently not much different from normal new other than the choice of exit keyword
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
+    /// use repl_framework::Repl;
     /// fn main() {
     ///     let mut repl = Repl::customized_new(
     ///         prompt: &str,
@@ -76,9 +78,15 @@ impl Repl {
     }
     /// returns new repl
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
+    /// use std::collections::HashMap;
+    /// use repl_framework::Repl;
     /// fn main() {
-    ///     let mut repl = Repl::new(prompt: &str, functions: HashMap<String, fn(Vec<String>)>);
+    ///     let mut functions = HashMap::new().insert("test".to_string, test as fn(Vec<String>));
+    ///     let mut repl = Repl::new("Hello", functions);
+    /// }
+    /// fn test(args: Vec<String>) {
+    ///     println!("{:?}", args);
     /// }
     pub fn new(prompt: &str, functions: HashMap<String, fn(Vec<String>)>) -> Repl {
         Repl {
@@ -90,9 +98,10 @@ impl Repl {
     }
     /// runs the repl
     /// # Example
-    /// ```rust
+    /// ```rust,ignore
+    /// use repl_framework::Repl;
     /// use std::collections::HashMap;
-    /// fn test() {
+    /// fn test(_: Vec<String>) {
     /// println!("test!");
     /// }
     /// fn main() {
