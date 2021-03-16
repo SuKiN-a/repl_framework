@@ -136,6 +136,4 @@ impl Repl {
             println!("{:?}", &self);
         }
     }
-    pub fn define_functions(&mut self, name: String, func: fn(Vec<String>)) {
-    }
 }
