@@ -1,6 +1,5 @@
 //! A crate to help you easily build a repl
 
-#![allow(dead_code)]
 use std::collections::HashMap;
 use std::io::{self, Write};
 /// The main Repl Struct which contains pretty much everything the crate has to offer
@@ -9,7 +8,7 @@ pub struct Repl {
     /// the prompt that is displayed when asking for input
     prompt: String,
     /// arguments recieved from the repl, cleaned for \r\n and \n endings
-    pub arguments: Vec<String>,
+    arguments: Vec<String>,
     /// the command for exiting, exists because exit functions won't work because of loop :(
     exit: String,
     /// all the functions in HashMap<String, fn(Vec<String>)> format, specified Vec<String>
@@ -33,7 +32,7 @@ impl Repl {
     ///     repl.take_arg();
     /// }
     /// ```
-    pub fn take_arg(&mut self) {
+    fn take_arg(&mut self) {
         self.arguments = self.take_arg_return();
     }
     /// same as take_arg, but returns the argument instead of storing it in self.argument
@@ -65,18 +64,14 @@ impl Repl {
     /// ```rust,ignore
     /// use repl_framework::Repl;
     /// fn main() {
-    ///     let mut repl = Repl::customized_new(
+    ///     let mut repl = Repl::custom(
     ///         prompt: &str,
     ///         exit: &str,
     ///         functions: HashMap<String, fn(Vec<String>)>
     ///     );
     /// }
     /// ```
-    pub fn customized_new(
-        prompt: &str,
-        exit: &str,
-        functions: HashMap<String, fn(Vec<String>)>,
-    ) -> Repl {
+    pub fn custom(prompt: &str, exit: &str, functions: HashMap<String, fn(Vec<String>)>) -> Repl {
         Repl {
             arguments: vec![String::new()],
             prompt: prompt.to_string(),
