@@ -1,3 +1,5 @@
+//! A crate to help you easily build a repl
+
 #![allow(dead_code)]
 use std::collections::HashMap;
 use std::io::{self, Write};
@@ -30,6 +32,7 @@ impl Repl {
     ///     let mut repl = Repl::new(">>> ", hashmap);
     ///     repl.take_arg();
     /// }
+    /// ```
     pub fn take_arg(&mut self) {
         self.arguments = self.take_arg_return();
     }
@@ -67,7 +70,8 @@ impl Repl {
     ///         exit: &str,
     ///         functions: HashMap<String, fn(Vec<String>)>
     ///     );
-    ///}
+    /// }
+    /// ```
     pub fn customized_new(
         prompt: &str,
         exit: &str,
@@ -83,22 +87,26 @@ impl Repl {
     /// returns new repl
     /// # Example
     /// ```rust,ignore
-    /// use std::collections::HashMap;
     /// use repl_framework::Repl;
+    /// fn test(_: Vec<String>) {
+    ///     println!("test");
+    /// }
     /// fn main() {
-    ///     let mut functions = HashMap::new().insert("test".to_string, test as fn(Vec<String>));
-    ///     let mut repl = Repl::new("Hello", functions);
+    ///     let mut repl = Repl::new(">>> ");
+    ///     repl.add_function("test", test as fn(Vec<String>));
+    ///     repl.run();
     /// }
-    /// fn test(args: Vec<String>) {
-    ///     println!("{:?}", args);
-    /// }
-    pub fn new(prompt: &str, functions: HashMap<String, fn(Vec<String>)>) -> Repl {
+    /// ```
+    pub fn new(prompt: &str) -> Repl {
         Repl {
             arguments: vec![String::new()],
             prompt: prompt.to_string(),
             exit: "exit".to_string(),
-            functions: functions,
+            functions: HashMap::<String, fn(Vec<String>)>::new(),
         }
+    }
+    pub fn add_function(&mut self, name: String, func: fn(Vec<String>)) {
+        self.functions.insert(name, func);
     }
     /// runs the repl
     /// # Example
@@ -114,6 +122,7 @@ impl Repl {
     ///     let mut repl = Repl::new(">>> ", hashmap);
     ///     repl.run()
     /// }
+    /// ```
     pub fn run(&mut self) {
         loop {
             self.take_arg();
