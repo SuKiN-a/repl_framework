@@ -125,6 +125,11 @@ impl Repl {
                 println!("Terminated REPL");
                 break;
             }
+            if self.functions.contains_key("") {
+                self.functions[&self.arguments[0]](
+                    self.arguments[0..self.arguments.len()].to_vec(),
+                );
+            }
             if self.functions.contains_key(&self.arguments[0]) {
                 self.functions[&self.arguments[0]](
                     self.arguments[1..self.arguments.len()].to_vec(),
