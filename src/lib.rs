@@ -129,10 +129,8 @@ impl Repl {
                 self.functions[&self.arguments[0]](
                     self.arguments[1..self.arguments.len()].to_vec(),
                 );
-            }else if self.functions.contains_key("") {
-                self.functions[""](
-                    self.arguments[0..self.arguments.len()].to_vec(),
-                );
+            } else if self.functions.contains_key("") {
+                self.functions[""](self.arguments[0..self.arguments.len()].to_vec());
             }
         }
     }
