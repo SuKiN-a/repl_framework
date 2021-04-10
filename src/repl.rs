@@ -107,7 +107,6 @@ impl Repl {
             arguments: Vec::new(),
             exit: exit.to_string(),
             functions: interpreter.functions,
-
         }
     }
     pub fn add_function(&mut self, name: String, func: fn(Vec<String>)) {

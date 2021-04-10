@@ -2,7 +2,7 @@ use crate::Repl;
 use std::{collections::HashMap, fs};
 /// the interpreter struct that contains all logic and code for interpreter creation
 pub struct Interpreter {
-    pub (crate) functions: HashMap<String, fn(Vec<String>)>,
+    pub(crate) functions: HashMap<String, fn(Vec<String>)>,
 }
 
 impl Interpreter {
