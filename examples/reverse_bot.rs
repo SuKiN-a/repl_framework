@@ -5,6 +5,8 @@ fn main() {
     // adding function reverse with no alias
     repl.add_function("".to_string(), reverse as fn(Vec<String>));
     repl.run();
+    // run the following code if you want an interpreter
+    // Interpreter::from_repl(repl).run("filename");
 }
 
 // function to reverse string
