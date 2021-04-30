@@ -1,6 +1,6 @@
 mod interpreter;
-mod repl;
 mod macros;
+mod repl;
 pub use interpreter::Interpreter;
-pub use repl::Repl;
 pub use macros::*;
+pub use repl::Repl;

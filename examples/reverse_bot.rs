@@ -1,6 +1,6 @@
 use std::{any::Any, collections::HashMap, sync::Arc};
 
-use repl_framework::{Repl, add_function};
+use repl_framework::{add_function, Repl};
 fn main() {
     // setting up the repl
     let mut repl = Repl::new(">>> ");

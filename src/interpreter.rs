@@ -40,7 +40,7 @@ impl Interpreter {
                 .map(|x| x.to_string())
                 .collect();
             if self.functions.contains_key(&arg[0]) {
-                self.functions[&arg[0]](self.data.clone(),arg[1..arg.len()].to_vec());
+                self.functions[&arg[0]](self.data.clone(), arg[1..arg.len()].to_vec());
             }
         }
     }
@@ -62,7 +62,7 @@ impl Interpreter {
                     println!("{}", dbg!(x).len());
                 });
                 dbg!("{}", arg[1..arg.len()].to_vec());
-                self.functions[&arg[0]](self.data.clone(),arg[1..arg.len()].to_vec());
+                self.functions[&arg[0]](self.data.clone(), arg[1..arg.len()].to_vec());
             }
         }
     }

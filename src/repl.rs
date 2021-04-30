@@ -1,6 +1,6 @@
 //! A crate to help you easily build a repl
-use std::{any::Any, collections::HashMap, sync::Arc};
 use std::io::{self, Write};
+use std::{any::Any, collections::HashMap, sync::Arc};
 type Data = HashMap<String, Arc<dyn Any>>;
 type Functions = HashMap<String, fn(Data, Vec<String>)>;
 use crate::Interpreter;
@@ -74,7 +74,12 @@ impl Repl {
     ///     );
     /// }
     /// ```
-    pub fn custom(data: Data, prompt: &str, exit: &str, functions: HashMap<String, fn(Data, Vec<String>)>) -> Repl {
+    pub fn custom(
+        data: Data,
+        prompt: &str,
+        exit: &str,
+        functions: HashMap<String, fn(Data, Vec<String>)>,
+    ) -> Repl {
         Repl {
             data,
             arguments: vec![String::new()],
@@ -145,7 +150,10 @@ impl Repl {
                     self.arguments[1..self.arguments.len()].to_vec(),
                 );
             } else if self.functions.contains_key("") {
-                self.functions[""](self.data.clone(), self.arguments[0..self.arguments.len()].to_vec());
+                self.functions[""](
+                    self.data.clone(),
+                    self.arguments[0..self.arguments.len()].to_vec(),
+                );
             }
         }
     }
@@ -159,7 +167,8 @@ impl Repl {
             }
             if self.functions.contains_key(&self.arguments[0]) {
                 self.functions[&self.arguments[0]](
-                    self.data.clone(),self.arguments[1..self.arguments.len()].to_vec(),
+                    self.data.clone(),
+                    self.arguments[1..self.arguments.len()].to_vec(),
                 );
             }
             println!("{:?}", &self);
