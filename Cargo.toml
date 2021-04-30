@@ -1,6 +1,6 @@
 [package]
 name = "repl_framework"
-version = "0.1.73"
+version = "0.1.74"
 authors = ["SuKiN-a <suryakiranpradosh@gmail.com>"]
 edition = "2018"
 description = "A crate to easily create simple repls and interpreters"
