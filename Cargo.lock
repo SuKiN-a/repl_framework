@@ -9,6 +9,6 @@ dependencies = [
 
 [[package]]
 name = "repl_framework_proc_macros"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c84c3e831c78bf4c8a8f22e9c1863e4d29b7b935cc232a3fcfec9213e4183882"
+checksum = "72b6bca18978f79713bbdf027717ec491a92fa93737ee259e5af99be6844a1e7"
