@@ -1,9 +1,11 @@
-use repl_framework::Repl;
+use std::{any::Any, collections::HashMap, sync::Arc};
+
+use repl_framework::{Repl, add_function};
 fn main() {
     // setting up the repl
     let mut repl = Repl::new(">>> ");
     // adding function reverse with no alias
-    repl.add_function("".to_string(), reverse as fn(Vec<String>));
+    add_function!(repl, "", reverse);
     repl.run();
     // run the following code if you want an interpreter
     // Interpreter::from_repl(repl).run("filename");
@@ -11,7 +13,7 @@ fn main() {
 
 // function to reverse string
 // probably not optimal, but it works
-fn reverse(string: Vec<String>) {
+fn reverse(_: HashMap<String, Arc<dyn Any>>, string: Vec<String>) {
     let mut outstring = String::new();
     for i in string {
         let j = i.chars();

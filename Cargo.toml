@@ -1,12 +1,12 @@
 [package]
 name = "repl_framework"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["SuKiN-a <suryakiranpradosh@gmail.com>"]
 edition = "2018"
 description = "A crate to easily create simple repls and interpreters"
 readme = "README.md"
 repository = "https://github.com/SuKiN-a/repl_framework"
-license-file = "LICENSE.md"
+license = "GPL-3.0"
 keywords = ["repl", "interpreter"]
 categories = ["command-line-interface"]
 

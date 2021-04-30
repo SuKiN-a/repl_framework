@@ -1,11 +1,13 @@
 //! A crate to help you easily build a repl
-use std::collections::HashMap;
+use std::{any::Any, collections::HashMap, sync::Arc};
 use std::io::{self, Write};
-
+type Data = HashMap<String, Arc<dyn Any>>;
+type Functions = HashMap<String, fn(Data, Vec<String>)>;
 use crate::Interpreter;
 /// The main Repl Struct which contains pretty much everything the crate has to offer
 #[derive(Debug)]
 pub struct Repl {
+    pub data: Data,
     /// the prompt that is displayed when asking for input
     prompt: String,
     /// arguments recieved from the repl, cleaned for \r\n and \n endings
@@ -14,7 +16,7 @@ pub struct Repl {
     exit: String,
     /// all the functions in HashMap<String, fn(Vec<String>)> format, specified Vec<String>
     /// because of the limitations of function pointers
-    pub(crate) functions: HashMap<String, fn(Vec<String>)>,
+    pub(crate) functions: Functions,
 }
 /// Repl methods
 impl Repl {
@@ -72,8 +74,9 @@ impl Repl {
     ///     );
     /// }
     /// ```
-    pub fn custom(prompt: &str, exit: &str, functions: HashMap<String, fn(Vec<String>)>) -> Repl {
+    pub fn custom(data: Data, prompt: &str, exit: &str, functions: HashMap<String, fn(Data, Vec<String>)>) -> Repl {
         Repl {
+            data,
             arguments: vec![String::new()],
             prompt: prompt.to_string(),
             exit: exit.to_string(),
@@ -95,21 +98,23 @@ impl Repl {
     /// ```
     pub fn new(prompt: &str) -> Repl {
         Repl {
+            data: Default::default(),
             arguments: vec![String::new()],
             prompt: prompt.to_string(),
             exit: "exit".to_string(),
-            functions: HashMap::<String, fn(Vec<String>)>::new(),
+            functions: Default::default(),
         }
     }
     pub fn from_interpreter(interpreter: Interpreter, prompt: &str, exit: &str) -> Repl {
         Repl {
+            data: interpreter.data,
             prompt: prompt.to_string(),
             arguments: Vec::new(),
             exit: exit.to_string(),
             functions: interpreter.functions,
         }
     }
-    pub fn add_function(&mut self, name: String, func: fn(Vec<String>)) {
+    pub fn add_function(&mut self, name: String, func: fn(Data, Vec<String>)) {
         self.functions.insert(name, func);
     }
     /// runs the repl
@@ -136,10 +141,11 @@ impl Repl {
             }
             if self.functions.contains_key(&self.arguments[0]) {
                 self.functions[&self.arguments[0]](
+                    self.data.clone(),
                     self.arguments[1..self.arguments.len()].to_vec(),
                 );
             } else if self.functions.contains_key("") {
-                self.functions[""](self.arguments[0..self.arguments.len()].to_vec());
+                self.functions[""](self.data.clone(), self.arguments[0..self.arguments.len()].to_vec());
             }
         }
     }
@@ -153,7 +159,7 @@ impl Repl {
             }
             if self.functions.contains_key(&self.arguments[0]) {
                 self.functions[&self.arguments[0]](
-                    self.arguments[1..self.arguments.len()].to_vec(),
+                    self.data.clone(),self.arguments[1..self.arguments.len()].to_vec(),
                 );
             }
             println!("{:?}", &self);
