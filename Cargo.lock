@@ -2,4 +2,13 @@
 # It is not intended for manual editing.
 [[package]]
 name = "repl_framework"
-version = "0.1.71"
+version = "0.1.72"
+dependencies = [
+ "repl_framework_proc_macros",
+]
+
+[[package]]
+name = "repl_framework_proc_macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c84c3e831c78bf4c8a8f22e9c1863e4d29b7b935cc232a3fcfec9213e4183882"

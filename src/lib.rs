@@ -1,3 +1,4 @@
+pub use repl_framework_proc_macros::*;
 mod interpreter;
 mod macros;
 mod repl;

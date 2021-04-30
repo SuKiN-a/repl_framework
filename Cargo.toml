@@ -1,6 +1,6 @@
 [package]
 name = "repl_framework"
-version = "0.1.71"
+version = "0.1.72"
 authors = ["SuKiN-a <suryakiranpradosh@gmail.com>"]
 edition = "2018"
 description = "A crate to easily create simple repls and interpreters"
@@ -14,3 +14,4 @@ categories = ["command-line-interface"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+repl_framework_proc_macros = "0.1.0"
