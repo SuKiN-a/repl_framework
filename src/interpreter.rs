@@ -32,11 +32,11 @@ impl Interpreter {
         let mut arg: Vec<String>;
         for line in fs::read_to_string(filename)
             .expect("could not read file")
-            .split("\n")
+            .split('\n')
         {
             arg = line
-                .trim_end_matches("\r")
-                .split(" ")
+                .trim_end_matches('\r')
+                .split(' ')
                 .map(|x| x.to_string())
                 .collect();
             if self.functions.contains_key(&arg[0]) {
@@ -49,11 +49,11 @@ impl Interpreter {
         let mut arg: Vec<String>;
         for line in fs::read_to_string(filename)
             .expect("could not read file")
-            .split("\n")
+            .split('\n')
         {
             arg = line
-                .trim_end_matches("\r")
-                .split(" ")
+                .trim_end_matches('\r')
+                .split(' ')
                 .map(|x| x.to_string())
                 .collect();
             if self.functions.contains_key(&arg[0]) {
@@ -65,5 +65,11 @@ impl Interpreter {
                 self.functions[&arg[0]](self.data.clone(), arg[1..arg.len()].to_vec());
             }
         }
+    }
+}
+
+impl Default for Interpreter {
+    fn default() -> Self {
+        Self::new()
     }
 }
