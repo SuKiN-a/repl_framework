@@ -67,6 +67,8 @@ impl<'a, T> Repl<'a, T> {
         self.add_function(name, func);
         self
     }
+    /// builder style menthod for changing the data.
+    /// this function is chainable, use set_data if you don't want it to be chainable.
     #[inline]
     pub fn with_data(mut self, data: T) -> Self {
         self.set_data(data);
