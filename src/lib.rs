@@ -1,7 +1,5 @@
-pub use repl_framework_proc_macros::*;
-mod interpreter;
-mod macros;
+//! repl_framework
+//! a crate to create a simple toy repl
 mod repl;
-pub use interpreter::Interpreter;
-pub use macros::*;
+mod utils;
 pub use repl::Repl;
