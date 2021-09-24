@@ -6,7 +6,6 @@ fn main() -> std::io::Result<()> {
 struct Data;
 
 // function to reverse string
-// probably not optimal, but it works
 fn reverse(_: &mut Data, strings: Vec<String>) {
     let mut outstring = String::new();
     strings.into_iter().for_each(|string| {

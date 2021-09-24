@@ -1,16 +1,10 @@
 [package]
 name = "repl_framework"
-version = "0.2.0"
-authors = ["SuKiN-a <suryakiranpradosh@gmail.com>"]
-edition = "2018"
+version = "0.2.1"
+edition = "2021"
 description = "A crate to easily create simple repls"
 readme = "README.md"
 repository = "https://github.com/SuKiN-a/repl_framework"
 license = "GPL-3.0"
 keywords = ["repl"]
 categories = ["command-line-interface"]
-
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
