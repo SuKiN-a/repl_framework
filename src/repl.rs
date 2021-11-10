@@ -1,5 +1,5 @@
 #![warn(clippy::all)]
-use crate::utils::{self, FnPtr};
+use crate::utils::{self, parse, FnPtr};
 use std::{collections::HashMap, io, io::Write};
 /// Main Repl Struct that contains all logic for the crate
 #[derive(Debug, Clone)]
@@ -18,6 +18,8 @@ pub struct Repl<'a, T> {
     unknown_command_message: &'a str,
     /// hashmap that stores functions
     functions: HashMap<&'a str, FnPtr<T>>,
+    /// parser function for input
+    parser_fn: fn(String) -> Vec<String>,
 }
 impl<T: Default> Default for Repl<'_, T> {
     /// builds a new Repl from the given data
@@ -44,6 +46,25 @@ impl<'a, T> Repl<'a, T> {
     /// let repl: Repl<()> = Repl::new(());
     /// ```
     #[inline]
+    pub fn new_with_depreciated_parser(data: T) -> Self {
+        Self {
+            data,
+            prompt: ">>>",
+            exit: "exit",
+            exit_message: "repl terminated",
+            functions: HashMap::new(),
+            empty_argument_message: "",
+            unknown_command_message: "",
+            parser_fn: |buf| {
+                buf.trim_end_matches('\n')
+                    .trim_end_matches('\r')
+                    .split_ascii_whitespace()
+                    .map(|f| f.to_owned())
+                    .collect()
+            },
+        }
+    }
+    #[inline]
     pub fn new(data: T) -> Self {
         Self {
             data,
@@ -53,6 +74,7 @@ impl<'a, T> Repl<'a, T> {
             functions: HashMap::new(),
             empty_argument_message: "",
             unknown_command_message: "",
+            parser_fn: parse,
         }
     }
     /// same as `take_arg`, but returns the argument instead of storing it in self.argument
@@ -63,23 +85,14 @@ impl<'a, T> Repl<'a, T> {
     /// - flushing stdout fails
     pub fn get_input(&self) -> io::Result<Vec<String>> {
         print!("{}", &self.prompt);
-        // flushing stdout because print! does'nt do it by default
+        // flushing stdout because print! doesn't do it by default
         io::stdout().flush()?;
         let mut buf = String::new();
         io::stdin().read_line(&mut buf)?;
-        // trimming \r\n and \n from the input
-        buf = buf
-            .trim_end_matches('\n')
-            .trim_end_matches('\r')
-            .to_string();
-        let mut args = Vec::new();
-        for i in buf.split_ascii_whitespace() {
-            args.push(i.to_string());
-        }
-        Ok(args)
+        Ok((self.parser_fn)(buf.trim().to_owned()))
     }
 
-    /// builder style menthod for adding a function.
+    /// builder style method for adding a function.
     /// this function is chainable, use `add_function` if you don't want it to be chainable.
     ///
     /// # Example
@@ -97,7 +110,35 @@ impl<'a, T> Repl<'a, T> {
         self.add_function(name, func);
         self
     }
-    /// builder style menthod for changing the data.
+    /// builder style method for changing the parser.
+    /// this function is chainable, use `set_parser` if you don't want it to be chainable.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use repl_framework::Repl;
+    /// let repl: Repl<()> = Repl::default().with_parser(|raw| vec![raw]);
+    /// ```
+    #[inline]
+    pub fn with_parser(mut self, parser: fn(String) -> Vec<String>) -> Self {
+        self.set_parser(parser);
+        self
+    }
+    /// sets parser function to argument, NOT chainable, use `with_parser` if you want chaining.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use repl_framework::Repl;
+    /// let mut repl: Repl<i32> = Repl::default();
+    /// repl.set_parser(|raw| vec![raw]);
+    /// ```
+    #[inline]
+    pub fn set_parser(&mut self, parser: fn(String) -> Vec<String>) {
+        self.parser_fn = parser;
+    }
+
+    /// builder style method for changing the data.
     /// this function is chainable, use `set_data` if you don't want it to be chainable.
     ///
     /// # Examples
@@ -258,7 +299,7 @@ impl<'a, T> Repl<'a, T> {
     ///
     /// # Examples
     ///
-    /// ```rust, ignore
+    /// ```rust, no_run
     /// use repl_framework::Repl;
     /// Repl::default().with_function("", |_: &mut (), b| println!("{:?}", b)).run();
     /// ```

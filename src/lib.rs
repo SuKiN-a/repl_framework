@@ -3,7 +3,7 @@
 //!
 //! # Examples
 //!
-//! ```rust
+//! ```rust, no_run
 //! use repl_framework::Repl;
 //! fn main() -> std::io::Result<()> {
 //!     Repl::default()
