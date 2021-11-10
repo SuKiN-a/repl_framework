@@ -46,6 +46,61 @@ impl<'a, T> Repl<'a, T> {
     /// let repl: Repl<()> = Repl::new(());
     /// ```
     #[inline]
+    pub fn new(data: T) -> Self {
+        Self {
+            data,
+            prompt: ">>>",
+            exit: "exit",
+            exit_message: "repl terminated",
+            functions: HashMap::new(),
+            empty_argument_message: "",
+            unknown_command_message: "",
+            parser_fn: parse,
+        }
+    }
+    /// runs the repl
+    /// functions which have command `""` will be called if none of the other commands are not called.
+    ///
+    /// # Examples
+    ///
+    /// ```rust, no_run
+    /// use repl_framework::Repl;
+    /// Repl::default().with_function("", |_: &mut (), b| println!("{:?}", b)).run();
+    /// ```
+    ///
+    /// # Errors
+    /// - reading from stdin fails
+    /// - flushing stdout fails
+    pub fn run(&mut self) -> io::Result<()> {
+        loop {
+            let arguments = self.get_input()?;
+            if arguments.is_empty() {
+                println!("{}", self.empty_argument_message);
+            } else if arguments.concat() == self.exit {
+                println!("{}", self.exit_message);
+                break;
+            } else if self.functions.contains_key(arguments[0].as_str()) {
+                self.functions[arguments[0].as_str()](
+                    &mut self.data,
+                    arguments[1..arguments.len()].to_vec(),
+                );
+            } else if self.functions.contains_key("") {
+                self.functions[""](&mut self.data, arguments[0..arguments.len()].to_vec());
+            } else {
+                println!("{}", self.unknown_command_message);
+            }
+        }
+        Ok(())
+    }
+    /// builds a new Repl from the given data, use for compatibility reasons only, the new parser is better in pretty much every way possible
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use repl_framework::Repl;
+    /// let repl: Repl<()> = Repl::new_with_depreciated_parser(());
+    /// ```
+    #[inline]
     pub fn new_with_depreciated_parser(data: T) -> Self {
         Self {
             data,
@@ -64,19 +119,6 @@ impl<'a, T> Repl<'a, T> {
             },
         }
     }
-    #[inline]
-    pub fn new(data: T) -> Self {
-        Self {
-            data,
-            prompt: ">>>",
-            exit: "exit",
-            exit_message: "repl terminated",
-            functions: HashMap::new(),
-            empty_argument_message: "",
-            unknown_command_message: "",
-            parser_fn: parse,
-        }
-    }
     /// same as `take_arg`, but returns the argument instead of storing it in self.argument
     ///
     /// # Errors
@@ -91,7 +133,6 @@ impl<'a, T> Repl<'a, T> {
         io::stdin().read_line(&mut buf)?;
         Ok((self.parser_fn)(buf.trim().to_owned()))
     }
-
     /// builder style method for adding a function.
     /// this function is chainable, use `add_function` if you don't want it to be chainable.
     ///
@@ -123,19 +164,6 @@ impl<'a, T> Repl<'a, T> {
     pub fn with_parser(mut self, parser: fn(String) -> Vec<String>) -> Self {
         self.set_parser(parser);
         self
-    }
-    /// sets parser function to argument, NOT chainable, use `with_parser` if you want chaining.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use repl_framework::Repl;
-    /// let mut repl: Repl<i32> = Repl::default();
-    /// repl.set_parser(|raw| vec![raw]);
-    /// ```
-    #[inline]
-    pub fn set_parser(&mut self, parser: fn(String) -> Vec<String>) {
-        self.parser_fn = parser;
     }
 
     /// builder style method for changing the data.
@@ -294,38 +322,17 @@ impl<'a, T> Repl<'a, T> {
     pub fn set_empty_argument_message(&mut self, empty_argument_message: &'a str) {
         self.empty_argument_message = empty_argument_message;
     }
-    /// runs the repl
-    /// functions which have command `""` will be called if none of the other commands are not called.
+    /// sets parser function to argument, NOT chainable, use `with_parser` if you want chaining.
     ///
     /// # Examples
     ///
-    /// ```rust, no_run
+    /// ```rust
     /// use repl_framework::Repl;
-    /// Repl::default().with_function("", |_: &mut (), b| println!("{:?}", b)).run();
+    /// let mut repl: Repl<i32> = Repl::default();
+    /// repl.set_parser(|raw| vec![raw]);
     /// ```
-    ///
-    /// # Errors
-    /// - reading from stdin fails
-    /// - flushing stdout fails
-    pub fn run(&mut self) -> io::Result<()> {
-        loop {
-            let arguments = self.get_input()?;
-            if arguments.is_empty() {
-                println!("{}", self.empty_argument_message);
-            } else if arguments.concat() == self.exit {
-                println!("{}", self.exit_message);
-                break;
-            } else if self.functions.contains_key(arguments[0].as_str()) {
-                self.functions[arguments[0].as_str()].0(
-                    &mut self.data,
-                    arguments[1..arguments.len()].to_vec(),
-                );
-            } else if self.functions.contains_key("") {
-                self.functions[""].0(&mut self.data, arguments[0..arguments.len()].to_vec());
-            } else {
-                println!("{}", self.unknown_command_message);
-            }
-        }
-        Ok(())
+    #[inline]
+    pub fn set_parser(&mut self, parser: fn(String) -> Vec<String>) {
+        self.parser_fn = parser;
     }
 }

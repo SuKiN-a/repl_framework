@@ -1,4 +1,4 @@
-use std::mem;
+use std::{mem, ops};
 
 #[derive(Clone, Copy)]
 pub(crate) struct FnPtr<T>(pub fn(&mut T, Vec<String>));
@@ -6,6 +6,14 @@ pub(crate) struct FnPtr<T>(pub fn(&mut T, Vec<String>));
 impl<T> std::fmt::Debug for FnPtr<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         std::fmt::Pointer::fmt(&(self.0 as usize as *const ()), f)
+    }
+}
+
+impl<T> ops::Deref for FnPtr<T> {
+    type Target = fn(&mut T, Vec<String>);
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
 
